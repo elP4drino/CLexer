@@ -38,6 +38,28 @@ class TestFloats(unittest.TestCase):
             self.assertEqual(token.type, 'FLOAT')
             self.assertEqual(token.value, value)
 
+class TestStrings(unittest.TestCase):
+    def setUp(self):
+        self.lexer = get_lexer()
+
+    def test_basic_strings(self):
+        self.lexer.input('"hello, world"')
+        token = self.lexer.token()
+        self.assertEqual(token.type, 'STRING')
+        self.assertEqual(token.value, '"hello, world"')
+    
+    def test_escaped_quotes_strings(self):
+        self.lexer.input('"hello \\"world\\""')
+        token = self.lexer.token()
+        self.assertEqual(token.type, 'STRING')
+        self.assertEqual(token.value, '"hello \\"world\\""')
+
+    def test_escaped_quotes_and_backslashes_strings(self):
+        self.lexer.input('"escaped \\"quotes\\" and \\\\ backslashes \\\\"')
+        token = self.lexer.token()
+        self.assertEqual(token.type, 'STRING')
+        self.assertEqual(token.value, '"escaped \\"quotes\\" and \\\\ backslashes \\\\"')
+
 
 if __name__ == '__main__':
     unittest.main()

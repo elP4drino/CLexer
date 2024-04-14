@@ -5,6 +5,11 @@ from ply.lex import TOKEN
 tokens = (
     'INT',
     'FLOAT',
+    'STRING',
+)
+
+states = (
+    ('string', 'exclusive'),
 )
 
 # Tokens rules
@@ -39,6 +44,37 @@ t_ignore = ' \t'
 
 # Error handling rule
 def t_error(t):
+    print("Illegal character '%s'" % t.value[0])
+    t.lexer.skip(1)
+
+# Conditional lexing
+# ---------- [STRING RULE] ----------
+s_char = rf'((\\\"|\\\\)|[^"\n\\])'
+s_char_sequence = rf'{s_char}+'
+
+def t_string(t):
+    r'\"'
+    t.lexer.str_start = t.lexer.lexpos - 1
+    t.lexer.begin('string')
+
+def t_string_ending_quote(t):
+    r'\"'
+    t.value = t.lexer.lexdata[t.lexer.str_start:t.lexer.lexpos + 1]
+    t.type = "STRING"
+    t.lexer.begin('INITIAL')
+    return t
+
+@TOKEN(s_char)
+def t_string_s_char(t):
+    pass
+
+@TOKEN(s_char_sequence)
+def t_string_s_char_sequence(t):
+    pass
+
+t_string_ignore = ' \t'
+
+def t_string_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
