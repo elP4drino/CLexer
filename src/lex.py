@@ -1,6 +1,7 @@
 import ply.lex as lex
+import int_rules
+import float_rules
 
-# Tokens
 tokens = (
     'INT',
 )
