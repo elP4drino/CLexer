@@ -6,6 +6,7 @@ tokens = (
     'INT',
     'FLOAT',
     'STRING',
+    'KEYWORD',
 )
 
 states = (
@@ -29,6 +30,18 @@ floating_point_constant = rf'(({floating_point_constant_1})|({floating_point_con
 
 int_regex = r'\d+'
 
+#--------- [KEYWORDS RULES] ----------
+keywords_1 = r'auto|break|case|char|const|continue|default|do|double|else|enum'
+keywords_2 = r'extern|float|for|goto|if|inline|int|long|register|restrict|return'
+keywords_3 = r'short|signed|sizeof|static|struct|switch|typedef|typeof|typeof_unqual|union|unsigned|void|volatile'
+keywords_4 = r'while|_Alignas|_Alignof|_Atomic|_Bool|_Complex|_Generic|_Noreturn|_Static_assert|_Thread_local'
+
+keywordsMicro_1 = r'__asm|__based|__cdecl|__declspec|__except|__fastcall|__finally'
+keywordsMicro_2 = r'__inline|__int16|__int32|__int64|__int8|__leave|__restrict'
+keywordsMicro_3 = r'__stdcall|__try|__typeof__|__typeof_unqual__|dllexport|dllimport|naked|static_assert|thread'
+KeyWords = rf'({keywords_1}|{keywords_2}|{keywords_3}|{keywords_4}|{keywordsMicro_1}|{keywordsMicro_2}|{keywordsMicro_3})'
+
+
 @TOKEN(floating_point_constant)
 def t_FLOAT(t):
     t.value = float(t.value)
@@ -37,6 +50,11 @@ def t_FLOAT(t):
 @TOKEN(int_regex)
 def t_INT(t):
     t.value = int(t.value)
+    return t
+
+@TOKEN(KeyWords)
+def t_KEYWORD(t):
+    
     return t
 
 # Ignored characters
