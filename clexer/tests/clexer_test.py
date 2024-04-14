@@ -6,10 +6,10 @@ class TestIntegers(unittest.TestCase):
         self.lexer = get_lexer()
 
     def test_basic_integers(self):
-        self.lexer.input('90000000000004')
+        self.lexer.input('034')
         token = self.lexer.token()
         self.assertEqual(token.type, 'INT')
-        self.assertEqual(token.value, 90000000000004)
+        self.assertEqual(token.value, 0o34)
 
 if __name__ == '__main__':
     unittest.main()
