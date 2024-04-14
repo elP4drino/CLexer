@@ -59,6 +59,15 @@ class TestStrings(unittest.TestCase):
         token = self.lexer.token()
         self.assertEqual(token.type, 'STRING')
         self.assertEqual(token.value, '"escaped \\"quotes\\" and \\\\ backslashes \\\\"')
+class IdentifierTests(unittest.TestCase):
+    def setUp(self):
+        self.lexer = get_lexer()
+
+    def test_identifiers(self):
+        self.lexer.input('LastNum')
+        token = self.lexer.token()
+        self.assertEqual(token.type, 'IDENTIFIER')
+        self.assertEqual(token.value, "LastNum")
 
 
 if __name__ == '__main__':
