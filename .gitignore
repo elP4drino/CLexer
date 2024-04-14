@@ -1,0 +1,6 @@
+# Residual and chached files
+*.pyc
+.DS_Store
+
+# Environments
+env
