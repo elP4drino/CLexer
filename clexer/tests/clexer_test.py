@@ -60,6 +60,28 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(token.type, 'STRING')
         self.assertEqual(token.value, '"escaped \\"quotes\\" and \\\\ backslashes \\\\"')
 
+class TestOperators(unittest.TestCase):
+    def setUp(self):
+        self.lexer = get_lexer()
+
+    def test_operator_tokens(self):
+        test_input = r'+ - * / % & ! ~ _Alignof sizeof ++ -- | ^ >> << < > <= >= == != && || ,'
+        expected_tokens = [
+            'PLUS', 'MINUS', 'TIMES', 'DIVISION', 'MODULO',
+            'AMPERSAND', 'EXCLAMATION_OPERATOR', 'COMPLEMENT_OPERATOR',
+            'ALIGNMENT_OPERATOR', 'SIZE_OPERATOR',
+            'INCREMENT', 'DECREMENT',
+            'BITWISE_OR', 'BITWISE_XOR', 'RIGHT_SHIFT', 'LEFT_SHIFT',
+            'LESS_THAN', 'BIGGER_THAN', 'LESS_THAN_OR_EQUAL', 'BIGGER_THAN_OR_EQUAL',
+            'EQUAL_TO', 'DIFFERENCE',
+            'LOGIC_AND', 'LOGIC_OR',
+            'SEQUENTIAL_OPERATOR'
+        ]
+        self.lexer.input(test_input)
+        for token_type in expected_tokens:
+            token = self.lexer.token()
+            self.assertEqual(token.type, token_type)
+
 
 if __name__ == '__main__':
     unittest.main()
