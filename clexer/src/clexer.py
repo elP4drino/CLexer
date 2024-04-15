@@ -1,19 +1,11 @@
 import ply.lex as lex
 from ply.lex import TOKEN
 
-# Tokens definition
-tokens = (
-    'INT',
-    'FLOAT',
-    'STRING',
-    'KEYWORD',
-)
-
 states = (
     ('string', 'exclusive'),
 )
 
-# Tokens rules
+# TOKENS RULES
 # ---------- [FLOAT RULE] ----------
 floating_suffix = r'[flFL]'
 digit_sequence = r'(\d+)'
@@ -31,16 +23,91 @@ floating_point_constant = rf'(({floating_point_constant_1})|({floating_point_con
 int_regex = r'\d+'
 
 #--------- [KEYWORDS RULES] ----------
-keywords_1 = r'auto|break|case|char|const|continue|default|do|double|else|enum'
-keywords_2 = r'extern|float|for|goto|if|inline|int|long|register|restrict|return'
-keywords_3 = r'short|signed|sizeof|static|struct|switch|typedef|typeof|typeof_unqual|union|unsigned|void|volatile'
-keywords_4 = r'while|_Alignas|_Alignof|_Atomic|_Bool|_Complex|_Generic|_Noreturn|_Static_assert|_Thread_local'
+reserved = {
+    'auto'     : 'AUTO',
+    'break'    : 'BREAK',
+    'case'     : 'CASE',
+    'char'     : 'CHAR',
+    'const'    : 'CONST',
+    'continue' : 'CONTINUE',
+    'default'  : 'DEFAULT',
+    'do'       : 'DO',
+    'double'   : 'DOUBLE',
+    'else'     : 'ELSE',
+    'enum'     : 'ENUM',
+    'extern'   : 'EXTERN',
+    'float'    : 'FLOAT_KEYWORD',
+    'for'      : 'FOR',
+    'goto'     : 'GOTO',
+    'if'       : 'IF',
+    'inline'   : 'INLINE',
+    'int'      : 'INT_KEYWORD',
+    'long'     : 'LONG',
+    'register' : 'REGISTER',
+    'restrict' : 'RESTRICT',
+    'return'   : 'RETURN',
+    'short'    : 'SHORT',
+    'signed'   : 'SIGNED',
+    'sizeof'   : 'SIZEOF',
+    'static'   : 'STATIC',
+    'struct'   : 'STRUCT',
+    'switch'   : 'SWITCH',
+    'typedef'  : 'TYPEDEF',
+    'typeof'   : 'TYPEOF',
+    'typeof_unqual' : 'TYPEOF_UNQUAL',
+    'union'    : 'UNION',
+    'unsigned' : 'UNSIGNED',
+    'void'     : 'VOID',
+    'volatile' : 'VOLATILE',
+    'while'    : 'WHILE',
+    '_Alignas'        : '_ALIGNAS',
+    '_Alignof'        : '_ALIGNOF',
+    '_Atomic'         : '_ATOMIC',
+    '_Bool'           : '_BOOL',
+    '_Complex'        : '_COMPLEX',
+    '_Generic'        : '_GENERIC',
+    '_Noreturn'       : '_NORETURN',
+    '_Static_assert'  : '_STATIC_ASSERT',
+    '_Thread_local'   : '_THREAD_LOCAL',
+    '__asm'           : '__ASM',
+    '__based'         : '__BASED',
+    '__cdecl'         : '__CDECL',
+    '__declspec'      : '__DECLSPEC',
+    '__except'        : '__EXCEPT',
+    '__fastcall'      : '__FASTCALL',
+    '__finally'       : '__FINALLY',
+    '__inline'        : '__INLINE',
+    '__int16'         : '__INT16',
+    '__int32'         : '__INT32',
+    '__int64'         : '__INT64',
+    '__int8'          : '__INT8',
+    '__leave'         : '__LEAVE',
+    '__restrict'      : '__RESTRICT',
+    '__stdcall'       : '__STDCALL',
+    '__try'           : '__TRY',
+    '__typeof__'      : '__TYPEOF__',
+    '__typeof_unqual__' : '__TYPEOF_UNQUAL__',
+    'dllexport'       : 'DLLEXPORT',
+    'dllimport'       : 'DLLIMPORT',
+    'naked'           : 'NAKED',
+    'static_assert'   : 'STATIC_ASSERT',
+    'thread'          : 'THREAD'
+}
 
-keywordsMicro_1 = r'__asm|__based|__cdecl|__declspec|__except|__fastcall|__finally'
-keywordsMicro_2 = r'__inline|__int16|__int32|__int64|__int8|__leave|__restrict'
-keywordsMicro_3 = r'__stdcall|__try|__typeof__|__typeof_unqual__|dllexport|dllimport|naked|static_assert|thread'
-KeyWords = rf'({keywords_1}|{keywords_2}|{keywords_3}|{keywords_4}|{keywordsMicro_1}|{keywordsMicro_2}|{keywordsMicro_3})'
+# Tokens definition
+tokens = [
+    'INT',
+    'FLOAT',
+    'STRING',
+    'KEYWORD'
+    ] + list(reserved.values())
 
+tokensWord = ['KEYWORD','KEYWORD'] + list(reserved.values())
+
+def t_KEYWORD(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'KEYWORD')    # Check for reserved words
+    return t
 
 @TOKEN(floating_point_constant)
 def t_FLOAT(t):
@@ -52,10 +119,7 @@ def t_INT(t):
     t.value = int(t.value)
     return t
 
-@TOKEN(KeyWords)
-def t_KEYWORD(t):
-    
-    return t
+
 
 # Ignored characters
 t_ignore = ' \t'

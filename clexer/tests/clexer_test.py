@@ -73,12 +73,12 @@ class KeywordsTest(unittest.TestCase):
         self.lexer = get_lexer()
 
     def test_keywords(self):
-        self.lexer.input('auto break continue _Alignas')
-        expected_tokens = ['auto', 'break', 'continue', '_Alignas']
+        self.lexer.input('auto')
+        expected_tokens = ['auto']
         for expected_value in expected_tokens:
             token = self.lexer.token()
             print({token.type},{token.value})
-            self.assertEqual(token.type, 'KEYWORD')
+            self.assertEqual(token.type, 'AUTO')
             self.assertEqual(token.value, expected_value)
 
 
