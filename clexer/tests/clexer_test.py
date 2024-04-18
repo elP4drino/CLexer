@@ -17,7 +17,7 @@ class TestFloats(unittest.TestCase):
     def setUp(self):
         self.lexer = get_lexer()
 
-    def test_basic_floats(self):
+    def test_basic_floats2(self):
         self.lexer.input('15.75 1. .54')
         for value in [15.75, 1.0, 0.54]:
             token = self.lexer.token()
@@ -34,6 +34,13 @@ class TestFloats(unittest.TestCase):
     def test_edge_cases_floats(self):
         self.lexer.input('.0075e2 0.075e1 .075e1 75e-2')
         for value in [0.75, 0.75, 0.75, 0.75]:
+            token = self.lexer.token()
+            self.assertEqual(token.type, 'FLOAT')
+            self.assertEqual(token.value, value)
+            
+    def test_basic_floats(self):
+        self.lexer.input('15.75 1. .54')
+        for value in [15.75, 1.0, 0.54]:
             token = self.lexer.token()
             self.assertEqual(token.type, 'FLOAT')
             self.assertEqual(token.value, value)
@@ -79,6 +86,20 @@ class TestLiterals(unittest.TestCase):
         token = self.lexer.token()
         self.assertEqual(token.type, 'LITERAL')
         self.assertEqual(token.value, literal)
+
+
+class KeywordsTest(unittest.TestCase):
+    def setUp(self):
+        self.lexer = get_lexer()
+
+    def test_keywords(self):
+        self.lexer.input('auto')
+        expected_tokens = ['auto']
+        for expected_value in expected_tokens:
+            token = self.lexer.token()
+            print({token.type},{token.value})
+            self.assertEqual(token.type, 'AUTO')
+            self.assertEqual(token.value, expected_value)
 
 
 if __name__ == '__main__':
