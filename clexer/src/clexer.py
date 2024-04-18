@@ -58,6 +58,9 @@ floating_point_constant = rf'(({floating_point_constant_1})|({floating_point_con
 
 int_regex = r'\d+'
 
+#---------- [KEYWORD RULE] ----------
+keywordr = r'[a-zA-Z_][a-zA-Z_0-9]*'
+
 #---------- [IDENTIFIER RULES] ----------
 digit = rf'[0-9]'
 nondigit = rf'[_a-zA-Z]'
@@ -136,19 +139,23 @@ reserved = {
 }
 
 # Tokens definition
-tokens = ['INT', 'FLOAT', 'STRING', 'ALIGNMENT', 'SIZE', 'IDENTIFIER', 'KEYWORD'] + list(reserved.values())
+tokens = ['INT', 'FLOAT', 'STRING', 'ALIGNMENT', 'SIZE', 'IDENTIFIER', 'KEYWORD'] + list(reserved.values()) 
 
 literals = ['*', '+', '-', '%', '/', '&', '!', '~', '|', '^', '=', ',', '(', ')', '{', '}']
-
-""" def t_KEYWORD(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'KEYWORD')    # Check for reserved words
-    return t """
 
 
 @TOKEN(identifier)
 def  t_IDENTIFIER(t):
+    if  t.value in reserved:
+        t.type = reserved.get(t.value,'KEYWORD') 
+    else:
+        t.type = 'IDENTIFIER'
     return t
+
+@TOKEN(keywordr)
+def t_KEYWORD(t):
+    t.type = reserved.get(t.value,'KEYWORD')    # Check for reserved words
+    return t 
 
 
 @TOKEN(floating_point_constant)
