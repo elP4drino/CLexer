@@ -7,10 +7,10 @@ class TestIntegers(unittest.TestCase):
         self.lexer = get_lexer()
 
     def test_basic_integers(self):
-        self.lexer.input('90000000000004')
+        self.lexer.input('0x8a44000000000040')
         token = self.lexer.token()
         self.assertEqual(token.type, 'INT')
-        self.assertEqual(token.value, 90000000000004)
+        self.assertEqual(token.value, 0x8a44000000000040)
 
 
 class TestFloats(unittest.TestCase):

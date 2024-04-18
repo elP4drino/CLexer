@@ -5,7 +5,39 @@ states = (
     ('string', 'exclusive'),
 )
 
-# Tokens rules
+# TOKENS RULES
+# ---------- [INT RULES] ----------
+digit = rf'[0-9]+'
+bit_integer_suffix_64 = rf'(i64|I64)'
+long_long_suffix = rf'(ll|LL)'
+long_suffix = rf'(l|L)'
+unsigned_suffix = rf'(u|U)'
+
+# Integer-suffix options
+integer_suffix_1 = rf'{unsigned_suffix}({long_suffix}?)'
+integer_suffix_2 = rf'{unsigned_suffix}{long_long_suffix}'
+integer_suffix_3 = rf'{unsigned_suffix}{bit_integer_suffix_64}'
+integer_suffix_4 = rf'{long_suffix}({unsigned_suffix}?)'
+integer_suffix_5 = rf'{long_long_suffix}({unsigned_suffix}?)'
+integer_suffix_6 = rf'{bit_integer_suffix_64}'
+integer_suffix = rf'(({integer_suffix_1})|({integer_suffix_2})|({integer_suffix_3})|({integer_suffix_4})|({integer_suffix_5})|({integer_suffix_6}))'
+
+hexadecimal_digit =  rf'[0-9a-fA-F]'
+octal_digit = rf'[0-7]'
+nonzero_digit = rf'[1-9]'
+hexadecimal_prefix = rf'(0x|0X)'
+
+hexadecimal_constant = rf'({hexadecimal_prefix}{hexadecimal_digit}+)'
+
+octal_constant = rf'(0{octal_digit}+)'
+
+decimal_constant = rf'({nonzero_digit}{digit}+)'
+
+integer_constant_1 = rf'{decimal_constant}({integer_suffix}?)'
+integer_constant_2 = rf'{octal_constant}({integer_suffix}?)'
+integer_constant_3 = rf'{hexadecimal_constant}({integer_suffix}?)'
+integer_constant = rf'(({integer_constant_1})|({integer_constant_2})|({integer_constant_3}))'
+
 # ---------- [OPERATOR RULES] ----------
 t_ALIGNMENT = r'_Alignof'
 t_SIZE = r'sizeof'
@@ -104,14 +136,14 @@ reserved = {
 }
 
 # Tokens definition
-tokens = ['INT', 'FLOAT', 'STRING', 'ALIGNMENT', 'SIZE', 'IDENTIFIER'] + list(reserved.values())
+tokens = ['INT', 'FLOAT', 'STRING', 'ALIGNMENT', 'SIZE', 'IDENTIFIER', 'KEYWORD'] + list(reserved.values())
 
 literals = ['*', '+', '-', '%', '/', '&', '!', '~', '|', '^', '=', ',', '(', ')', '{', '}']
 
-def t_KEYWORD(t):
+""" def t_KEYWORD(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value,'KEYWORD')    # Check for reserved words
-    return t
+    return t """
 
 
 @TOKEN(identifier)
@@ -124,9 +156,16 @@ def t_FLOAT(t):
     t.value = float(t.value)
     return t
 
-@TOKEN(int_regex)
+@TOKEN(integer_constant)
 def t_INT(t):
-    t.value = int(t.value)
+    if len(t.value) > 1 and t.value[0] == '0':
+        if t.value[1] in ('x', 'X'):
+            t.value = int(t.value, 16)
+        else:
+            t.value = int(t.value, 8)
+    else:
+        t.value = int(t.value)
+        
     return t
 
 
