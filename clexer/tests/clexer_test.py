@@ -101,6 +101,14 @@ class KeywordsTest(unittest.TestCase):
             self.assertEqual(token.type, 'AUTO')
             self.assertEqual(token.value, expected_value)
 
+class FullTester(unittest.TestCase):
+    def setUp(self):
+        self.lexer = get_lexer()
+
+    def test_text(self):
+        self.lexer.input('void swap(int* xp, int* yp){int temp = *xp; *xp = *yp; *yp = temp;}')
+        token = self.lexer.token()
+        self.assertEqual(token.type, 'VOID')
 
 if __name__ == '__main__':
     unittest.main()
