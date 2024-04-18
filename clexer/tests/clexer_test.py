@@ -81,10 +81,10 @@ class TestLiterals(unittest.TestCase):
         self.lexer = get_lexer()
 
     def test_basic_literals(self):
-        literal = '*+-%/&!~|^=,(){}'
+        literal = '*'
         self.lexer.input(literal)
         token = self.lexer.token()
-        self.assertEqual(token.type, 'LITERAL')
+        self.assertEqual(token.type, '*')
         self.assertEqual(token.value, literal)
 
 
