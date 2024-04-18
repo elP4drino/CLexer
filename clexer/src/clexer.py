@@ -2,7 +2,7 @@ import ply.lex as lex
 from ply.lex import TOKEN
 
 # Tokens definition
-tokens = ['INT', 'FLOAT', 'STRING', 'ALIGNMENT', 'SIZE']
+tokens = ['INT', 'FLOAT', 'STRING', 'ALIGNMENT', 'SIZE', 'IDENTIFIER']
 
 literals = ['*', '+', '-', '%', '/', '&', '!', '~', '|', '^', '=', ',', '(', ')', '{', '}']
 
@@ -30,6 +30,15 @@ floating_point_constant_2 = rf'{digit_sequence}{exponent_part}{floating_suffix}?
 floating_point_constant = rf'(({floating_point_constant_1})|({floating_point_constant_2}))'
 
 int_regex = r'\d+'
+
+#---------- [IDENTIFIER RULES] ----------
+digit = rf'[0-9]'
+nondigit = rf'[_a-zA-Z]'
+identifier = rf'({nondigit}+{digit}*)'
+
+@TOKEN(identifier)
+def  t_IDENTIFIER(t):
+    return t
 
 @TOKEN(floating_point_constant)
 def t_FLOAT(t):
