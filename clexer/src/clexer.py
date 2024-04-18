@@ -2,17 +2,19 @@ import ply.lex as lex
 from ply.lex import TOKEN
 
 # Tokens definition
-tokens = (
-    'INT',
-    'FLOAT',
-    'STRING',
-)
+tokens = ['INT', 'FLOAT', 'STRING', 'ALIGNMENT', 'SIZE']
+
+literals = ['*', '+', '-', '%', '/', '&', '!', '~', '|', '^', '=', ',', '(', ')', '{', '}']
 
 states = (
     ('string', 'exclusive'),
 )
 
 # Tokens rules
+# ---------- [OPERATOR RULES] ----------
+t_ALIGNMENT = r'_Alignof'
+t_SIZE = r'sizeof'
+
 # ---------- [FLOAT RULE] ----------
 floating_suffix = r'[flFL]'
 digit_sequence = r'(\d+)'

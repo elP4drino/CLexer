@@ -60,6 +60,17 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(token.type, 'STRING')
         self.assertEqual(token.value, '"escaped \\"quotes\\" and \\\\ backslashes \\\\"')
 
+class TestLiterals(unittest.TestCase):
+    def setUp(self):
+        self.lexer = get_lexer()
+
+    def test_basic_literals(self):
+        literal = '*+-%/&!~|^=,(){}'
+        self.lexer.input(literal)
+        token = self.lexer.token()
+        self.assertEqual(token.type, 'LITERAL')
+        self.assertEqual(token.value, literal)
+
 
 if __name__ == '__main__':
     unittest.main()
